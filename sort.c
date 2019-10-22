@@ -1,87 +1,167 @@
-#include<stdio.h>
 #include<stdlib.h>
+#include<stdio.h>
 
-typedef struct List
+struct node
 {
-	int data;
-	struct List *next;
-}list;
+  int data;
+  struct node *next;
+};
+typedef struct node *Node;
 
-list *temp;
-list *head=0;
-
-void insert(int item)
-{	
-	int i,pos=1;
-		list *prt;
-		prt=head;
-		temp=(list*)malloc(sizeof(list));
-		temp->data=item;	
-		while(prt!=0)
-		{
-			if(prt->data <= temp->data)
-				break;
-			pos++;
-			prt=prt->next;
-		}			
-		if(pos==1)
-		{
-			temp->next=head;
-			head=temp;
-		}
-		else
-		{
-			prt=head;
-			for(i=1;i<pos-1;i++)
-			{
-				prt=prt->next;
-			}
-			temp->next=prt->next;
-			prt->next=temp;
-		}
+Node getnode()
+{
+  Node x;
+  x=(Node) malloc (sizeof(Node));
+  if(x!=NULL)
+    return x;
+  else
+    {
+      printf("Memory is not allocated");
+      exit(0);
+    }
 }
 
-void display()
+
+
+Node insert_end(Node first,int item)
 {
-	temp=head;
-	if(temp==0)
-	{
-		printf("\nlist is empty");
-		return;
-	}
+  Node temp,x;
+  x=getnode();
+  x->data=item;
+  x->next=NULL;
+  if(first==NULL)
+     return x;
+  temp=first;
+  while(temp->next!=NULL)
+     temp=temp->next;
+  temp->next=x;
+  return first;
+}
+
+
+ 
+ 
+ 
+Node sort(Node first)
+{
+	Node temp1,temp2,head;
+	head=first;
+	int swap;
+	//second=first->next;
+	if(first==NULL)
+	printf("EMPTY\n");
 	else
 	{
-		while(temp!=0)
+		for(temp1=first;temp1->next!=NULL;temp1=temp1->next)
 		{
-			printf("\n%d",temp->data);
-			temp=temp->next;
+			for(temp2=temp1->next;temp2!=NULL;temp2=temp2->next)
+			{
+			
+				if(temp1->data>temp2->data)
+				{
+				swap=temp1->data;
+				temp1->data=temp2->data;
+				temp2->data=swap;
+				}
+				
+			}
+			
+			
 		}
+		}
+		
+	
+	return head;
+}
+	Node concatenate(Node first1,Node first2)
+	{
+		Node temp=first1;
+		while(first1->next!=NULL)
+		{
+			first1=first1->next;
+		}
+		first1->next=first2;
+		return temp;
 	}
+	
+	Node reverse(Node first)
+	{
+		Node curr,prev,temp;
+		prev=NULL;
+		curr=first;
+		
+		while(curr!=NULL)
+		{
+			temp=curr->next;
+			curr->next=prev;
+			prev=curr;
+			curr=temp;
+		}
+		first=prev;
+		return  first;
+	}
+void display(Node first)
+{
+  Node temp;
+  if(first==NULL)
+    {
+      printf("list is empty\n");
+    }
+  else
+    {
+      temp=first;
+      printf("Element in the list: ");
+      while(temp!=NULL)
+        {
+          printf("%d ",temp->data);
+          temp=temp->next;
+         }
+      printf("\n");
+     }
 }
 
 int main()
 {
-	
-	int item,n;
-	while(1)
+  Node first1=NULL;
+  Node first2=NULL;
+  int a,value,pos;
+  while(1)
 	{
-		printf("\n\nchoose an operation :");
-		printf("\n1.insert\n2.display\n3.exit\n\nchoice :");
-		scanf("%d",&n);	
-		switch(n)
-		{
-			case 1: printf("\nenter an element :");
-				scanf("%d",&item);
-				insert(item);
-				break;
 		
-			case 2: display();
-				break;
-			
-			case 3: exit(0);
-			
-			default: printf("\nINVALID INPUT");
-		}
-	}
-	return 0;
+		printf("1.insert list 1\n");
+		printf("2.insert list 2\n");
+		printf("3.sort list 1\n");
+		printf("4.sort list 2\n");
+		printf("5.concatenate\n");
+		printf("6.reverse\n");
+		printf("7.exit\n");
+		scanf("%d",&a);
+   		switch(a)
+       		{
+         case 1: printf("Enter the element to be inserted: ");
+                 scanf("%d",&value);
+                 first1=insert_end(first1,value);
+                 break;
+         case 2: printf("Enter the element to be inserted: ");
+                 scanf("%d",&value);
+                 first2=insert_end(first2,value);
+                 break;
+          case 3: first1=sort(first1);
+          	  display(first1);
+          	  break;
+          case 5: first1=concatenate(first1,first2);
+          	  display(first1);
+          	  break;
+         case 4:  first2=sort(first2);
+          	  display(first2);
+          	  break;
+         case 6: first1=reverse(first1);
+          	  	display(first1);
+          	  	break;
+      
+         case 7: exit(0);
+         default: printf("Invalid choice\n");
+       }
+    }
+  return 0;
 }
